@@ -1,0 +1,11 @@
+zabbix_postgres_version: 10.1
+zabbix_postgres_port: 9601
+zabbix_postgres_host: localhost 
+zabbix_postgres_user: application
+zabbix_postgres_password: 123456
+
+zabbix_redis_version: 3.2
+zabbix_redis_port: 9602
+
+zabbix_auth_port: 9701
+
