@@ -1,0 +1,35 @@
+- name: Postgres
+  hosts: localhost
+
+  tasks:
+
+    - name: Create postgres volume
+      docker_volume:
+        name: zabbix-postgres
+
+- name: Run postgres
+  docker_container:
+    name: "postgres-server"
+    hostname: "postgres-server-{{ inventory_hostname }}"
+    image: "postgres:{{ zabbix_postgres_version }}"
+    state: started
+    volumes:
+      - "-postgres-volume:/var/lib/postgresql/data"
+    ports:
+      - "{{ zabbix_postgres_port }}:5432"
+    env:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: "{{ zabbix_postgres_user }}"
+      POSTGRES_PASSWORD: "{{ zabbix_postgres_password }}"
+
+
+- name: Sleep for 3 seconds, wait create postgres
+  wait_for: timeout=3
+
+- name: Create database
+  postgresql_db:
+    name: apteka
+    port: "{{ zabbix_postgres_port }}"
+    login_host: "{{ zabbix_postgres_host }}"
+    login_user: "{{ zabbix_postgres_user }}"
+    login_password: "{{ zabbix_postgres_password }}"
